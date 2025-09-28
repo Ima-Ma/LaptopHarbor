@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stripe Payment</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    #payment-element {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #pay-now-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    #pay-now-btn:hover {
+      background-color: #218838;
+    }
+
+    #cancel-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    #cancel-btn:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <h2>Secure Card Payment</h2>
+
+  <div id="payment-element"></div>
+
+  <div class="button-group">
+    <button id="pay-now-btn">Pay Now</button>
+    <button id="cancel-btn" onclick="window.history.back()">Cancel</button>
+  </div>
+
+  <script>
+    const stripe = Stripe("pk_test_51PjLicJcUaLVsrNDDlPQYktZZjquKqJGfQd1t7RdfRiyMWQHV52KvYJIGSjV1bN6axmrz00v0uCer3LJhaU7BrWA00Voigy2Ly");
+
+    const clientSecret = "pi_3RdXJGJcUaLVsrND1Kt5lG90_secret_sbHvGRCUaJeagWSRwep0Fy5z3";
+    const elements = stripe.elements({ clientSecret });
+
+    const paymentElement = elements.create("payment", {
+      fields: {
+        billingDetails: {
+          address: 'never' // ✅ Hide country dropdown
+        }
+      }
+    });
+
+    paymentElement.mount("#payment-element");
+
+    document.getElementById("pay-now-btn").addEventListener("click", async () => {
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: "http://127.0.0.1:5500/web/stripe/payment-success.html",
+        },
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+    });
+  </script>
+</body>
+</html>

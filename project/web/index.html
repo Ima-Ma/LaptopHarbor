@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- If serving your app from a subpath, change this base href -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+  
+  <!-- Google Sign-In Web Client ID -->
+  <meta name="google-signin-client_id" content="158249219840-s4rtejgrf0cljgnch70cujuumndrf2ta.apps.googleusercontent.com" />
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="project">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>project</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <!-- Google Sign-In Button Render Script -->
+  <script>
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: "158249219840-s4rtejgrf0cljgnch70cujuumndrf2ta.apps.googleusercontent.com",
+        callback: (response) => {
+          console.log("Google ID token:", response.credential);
+          // Flutter handles sign-in callback, no further JS action needed.
+        }
+      });
+
+      // Optional: Auto-render if button is present in DOM
+      if (document.getElementById("g_id_signin")) {
+        google.accounts.id.renderButton(
+          document.getElementById("g_id_signin"),
+          { theme: "outline", size: "large", width: 250 }
+        );
+      }
+    };
+  </script>
+
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
+
